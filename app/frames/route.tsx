@@ -1,26 +1,16 @@
 /* eslint-disable react/jsx-key */
-import { Button } from "frames.js/next";
 import { frames } from "./frames";
+import { Button } from "frames.js/next";
  
-const handleRequest = frames(async (ctx) => {
+const frameHandler = frames(async () => {
   return {
-    image: (
-      <span>
-        {ctx.pressedButton
-          ? `I clicked ${ctx.searchParams.value}`
-          : `Click some button`}
-      </span>
-    ),
+    image: <div tw="flex">Welcome</div>,
     buttons: [
-      <Button action="post" target={{ query: { value: "Yes" } }}>
-        Say Yes
-      </Button>,
-      <Button action="post" target={{ query: { value: "No" } }}>
-        Say No
-      </Button>,
+      <Button action="post" target="/route1">Go to route 1</Button>,
+      <Button action="post" target="/route2">Go to route 2</Button>,
     ],
   };
 });
  
-export const GET = handleRequest;
-export const POST = handleRequest;
+export const GET = frameHandler;
+export const POST = frameHandler;

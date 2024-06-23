@@ -19,6 +19,7 @@ contract Raffle is Ownable, IEntropyConsumer {
 
     address[] public participants;
     bool public isEnded;
+    mapping(address => bool) public hasJoined;
 
     IEntropy private entropy;
     address private entropyProvider;
@@ -27,6 +28,7 @@ contract Raffle is Ownable, IEntropyConsumer {
     event RaffleEnded(address[] winners);
     event IncentivePaid(address lastUser, uint256 amount);
     event FlipRequest(uint64 sequenceNumber);
+    event DistributedPrizes(address winner, uint64 amount);
 
     constructor(
         uint256 _numberOfUsers,
@@ -61,11 +63,13 @@ contract Raffle is Ownable, IEntropyConsumer {
         require(!isEnded, "Raffle has ended");
         require(participants.length < numberOfUsers, "Raffle is full");
         require(block.timestamp < endTime, "Raffle has expired");
+        require(!hasJoined[msg.sender], "User has already joined the raffle");
 
         // Verify signature
         require(verify(signature, msg.sender), "Signature verification failed");
 
         participants.push(msg.sender);
+        hasJoined[msg.sender] = true;
         emit RaffleJoined(msg.sender);
 
         if (participants.length == numberOfUsers) {
@@ -87,10 +91,8 @@ contract Raffle is Ownable, IEntropyConsumer {
         emit FlipRequest(sequenceNumber);
 
         // Pay incentive to the last user
-        if (msg.sender != host) {
-            payable(msg.sender).transfer(incentive);
-            emit IncentivePaid(msg.sender, incentive);
-        }
+        payable(msg.sender).transfer(incentive);
+        emit IncentivePaid(msg.sender, incentive);
     }
 
     function entropyCallback(
@@ -120,6 +122,7 @@ contract Raffle is Ownable, IEntropyConsumer {
         uint256 prize = tokensPerWinner;
         for (uint256 i = 0; i < winners.length; i++) {
             IERC20(tokenAddress).transfer(winners[i], prize);
+            emit DistributedPrizes(prize, winners[i]);
         }
         // Return 5% extra to host
         uint256 hostShare = (tokensPerWinner * winnerCount * 5) / 100;

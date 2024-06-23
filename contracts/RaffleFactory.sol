@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract RaffleFactory is Ownable {
     address[] public raffles;
+    uint256 public constant MUST_DEPOSIT = 0.00075 ether;
     uint256 public constant INCENTIVE = 0.0005 ether;
 
     event RaffleCreated(address indexed raffle, address indexed host);
@@ -22,7 +23,7 @@ contract RaffleFactory is Ownable {
         uint256 totalReward = tokensPerWinner * winnerCount;
         uint256 hostDeposit = totalReward + (totalReward / 20); // Adding 5% to the total reward
 
-        require(msg.value >= INCENTIVE, "Incorrect ETH amount sent for incentive");
+        require(msg.value >= MUST_DEPOSIT, "Incorrect ETH amount sent for incentive");
 
         // Check the allowance before attempting the transfer
         uint256 allowance = IERC20(tokenAddress).allowance(host, address(this));

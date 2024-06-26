@@ -10,9 +10,11 @@
   },
   "dependencies": {
     "@airstack/airstack-react": "^0.6.3",
+    "@airstack/frames": "^1.1.9",
     "@airstack/node": "^0.0.7",
     "@openzeppelin/contracts": "^5.0.2",
     "@pythnetwork/entropy-sdk-solidity": "^1.5.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "frames.js": "^0.17.0",
     "next": "14.2.4",

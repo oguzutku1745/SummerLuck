@@ -1,11 +1,7 @@
 import {
     Abi,
-    createPublicClient,
-    encodeFunctionData,
-    getContract,
-    http,
+    encodeFunctionData
   } from "viem";
-  import { base } from "viem/chains";
   import { frames } from "../frames";
   import { raffleABI } from "./contracts/RaffleABI";
   import { transaction } from "frames.js/core";
@@ -14,39 +10,40 @@ import {
     if (!ctx?.message) {
       throw new Error("Invalid frame message");
     }
+    
+
+    const userSign = ctx.searchParams.userSign;
+    if (!userSign) {
+      throw new Error("User signature is required");
+    }
   
   
     const calldata = encodeFunctionData({
       abi: raffleABI,
-      functionName: "joinLottery",
+      functionName: "joinRaffle",
       args: [
-        BigInt(ctx.message.requesterFid), units
-    ] as const,
+        userSign
+      ] as const,
     });
   
-    const publicClient = createPublicClient({
-      chain: base,
-      transport: http(),
-    });
   
-    const STORAGE_REGISTRY_ADDRESS = process.env.RAFFLE_ADDRESS;
-  
-    const storageRegistry = getContract({
-      address: STORAGE_REGISTRY_ADDRESS,
-      abi: storageRegistryABI,
-      client: publicClient,
-    });
-  
-    const unitPrice = await storageRegistry.read.price([units]);
-  
+    const RAFFLE_ADDRESS = process.env.RAFFLE_ADDRESS;
+
+    if (!RAFFLE_ADDRESS || !RAFFLE_ADDRESS.startsWith('0x')) {
+      throw new Error("RAFFLE_ADDRESS is not defined or does not start with '0x'");
+    }
+
+    const validatedRaffleAddress = RAFFLE_ADDRESS as `0x${string}`;
+    
+
     return transaction({
-      chainId: "eip155:10", // OP Mainnet 10
+      chainId: "eip155:84532", // Base sepolia
       method: "eth_sendTransaction",
       params: {
-        abi: storageRegistryABI as Abi,
-        to: STORAGE_REGISTRY_ADDRESS,
+        abi: raffleABI as Abi,
+        to: validatedRaffleAddress,
         data: calldata,
-        value: unitPrice.toString(),
+        value: "0",
       },
     });
   });

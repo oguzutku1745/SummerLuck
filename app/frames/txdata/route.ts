@@ -16,7 +16,7 @@ import {
     if (!userSign) {
       throw new Error("User signature is required");
     }
-  
+    console.log(userSign)
   
     const calldata = encodeFunctionData({
       abi: raffleABI,

@@ -87,7 +87,7 @@ const frameHandler = frames(async (ctx) => {
       ),
       buttons: [
         true && message.requesterVerifiedAddresses ? (
-          <Button action="tx" target={{ pathname: "/txdata", query: { userSign: signature } }} >
+          <Button action="tx" target={{ pathname: "/txdata", query: { userSign: signature } }} post_url="/" >
             Mint
           </Button>
         ) : (

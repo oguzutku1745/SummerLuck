@@ -37,8 +37,8 @@ export default async function handler(req:any) {
     return new ImageResponse(
       content,
       {
-        width: 1200,
-        height: 628,
+        width: 400,
+        height: 250,
       }
     );
   } catch (error) {

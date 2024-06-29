@@ -15,103 +15,67 @@ const frameHandler = frames(async (ctx) => {
   const verifiedAddress = message?.requesterVerifiedAddresses;
   const casterName = process.env.FARCASTER_NAME;
   let signature;
-  
-  
+
   const privateKey = process.env.PRIVATE_KEY;
   if (!privateKey) {
     throw new Error('PRIVATE_KEY environment variable is not set.');
   }
   const wallet = new ethers.Wallet(privateKey);
-  
+
   const createSignature = async () => {
-    console.log("called")
     const messageHash = ethers.utils.solidityKeccak256(['address', 'string'], [verifiedAddress?.[0], casterName]);
-    console.log(messageHash)
     const signature = await wallet.signMessage(ethers.utils.arrayify(messageHash));
-    return signature
+    return signature;
   }
-  
-  console.log(message?.requesterVerifiedAddresses?.[0] ?? 'Address not available');
-  console.log(ctx.searchParams?.page);
-  if(ctx.searchParams?.page == "result") {
-    if (true && verifiedAddress) (
-      signature = await createSignature()
-    )
+
+  if (ctx.searchParams?.page == "result" && verifiedAddress) {
+    signature = await createSignature();
   }
+
+  let buttons;
+
   if (ctx.message?.transactionId) {
-    return {
-      image: (
-        <div tw="bg-purple-800 text-white w-full h-full justify-center items-center flex">
-          Transaction submitted! {ctx.message.transactionId}
-        </div>
-      ),
-      imageOptions: {
-        aspectRatio: "1:1",
-      },
-      buttons: [
-        <Button
-          action="link"
-          target={`https://sepolia.basescan.org//tx/${ctx.message.transactionId}`}
-        >
-          View on block explorer
-        </Button>,
-      ],
-    };
-  }
-
-  if (page === "initial")
-    return {
-      image: (
-        <span>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            Welcome to Lucky Summer!
-            You can join to raffle if you follow the caster.
-          </div>
-        </span>
-      ),
-      buttons: [
+    buttons = [
+      <Button
+        action="link"
+        target={`https://sepolia.basescan.org//tx/${ctx.message.transactionId}`}
+      >
+        View on block explorer
+      </Button>,
+    ];
+  } else if (page === "initial") {
+    buttons = [
+      <Button action="post" target={{ query: { page: "result" } }}>
+        Am I?
+      </Button>,
+    ];
+  } else if (message) {
+    buttons = [
+      true && message.requesterVerifiedAddresses ? (
+        <Button action="tx" target={{ pathname: "/txdata", query: { userSign: signature } }} post_url="/" >
+          Mint
+        </Button>
+      ) : (
         <Button action="post" target={{ query: { page: "result" } }}>
-          Am I?
-        </Button>,
-      ],
-    };
-
-  if (message && typeof true === 'boolean') {
-    return {
-      image: (
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          {true
-            ? "You are following the caster."
-            : "You are not following the caster"}
-        </div>
+          Make sure you have custody address & check again
+        </Button>
       ),
-      buttons: [
-        true && message.requesterVerifiedAddresses ? (
-          <Button action="tx" target={{ pathname: "/txdata", query: { userSign: signature } }} post_url="/" >
-            Mint
-          </Button>
-        ) : (
-          <Button action="post" target={{ query: { page: "result" } }}>
-            Make sure you have custody address & check again
-          </Button>
-        ),
-      ],
-    };
-  }
-
-  return {
-    image: (
-      <div style={{ display: "flex", flexDirection: "column" }}>
-        Error: Invalid message format.
-      </div>
-    ),
-    buttons: [
+    ];
+  } else {
+    buttons = [
       <Button action="post" target="/">
         Go Back
       </Button>,
-    ],
+    ];
+  }
+
+  const imageUrl = `${process.env.APP_URL}/api/render-image?page=${page}&transactionId=${ctx.message?.transactionId || ''}&isFollowing=${followState}`;
+
+  return {
+    image: imageUrl,
+    buttons: buttons,
   };
 });
- 
+
 export const GET = frameHandler;
 export const POST = frameHandler;

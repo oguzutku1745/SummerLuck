@@ -18,6 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
       <meta property="fc:frame" content="vNext" />
+      <meta property="fc:frame:image" />
       </head>
       <body className={inter.className}>{children}</body>
     </html>

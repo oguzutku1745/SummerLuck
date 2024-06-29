@@ -16,6 +16,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+      <meta property="fc:frame" content="vNext" />
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   );

@@ -1,16 +1,11 @@
 import { createFrames } from "frames.js/next";
 import { farcasterHubContext } from "frames.js/middleware";
 
-type State = {
-  follows: boolean;
-};
- 
-export const frames = createFrames<State>({
-  initialState: {
-    follows: false,
-  },
+
+export const frames = createFrames({
   basePath: "/frames",
   debug: process.env.NODE_ENV === "development",
+  baseUrl: process.env.APP_URL,
   middleware: [
     farcasterHubContext(),
   ],

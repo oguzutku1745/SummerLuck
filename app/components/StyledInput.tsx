@@ -21,7 +21,7 @@ const FormField = styled.input`
   border-bottom: 2px solid ${gray};
   outline: 0;
   font-size: 1.3rem;
-  color: ${white};
+  color: ${primary};
   padding: 7px 0;
   background: transparent;
   transition: border-color 0.2s;

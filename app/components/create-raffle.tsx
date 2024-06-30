@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import { ethers } from 'ethers';
 import ConnectWallet from './ConnectWallet';
 import StyledInput from './StyledInput';
 import styled from 'styled-components';
@@ -11,7 +12,8 @@ const FormContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative; /* To position Connect Wallet Button */
+  position: relative;
+  gap: 10px
 `;
 
 const Form = styled.form`
@@ -59,22 +61,70 @@ const CreateRaffle = () => {
   const [numberOfWinners, setNumberOfWinners] = useState(0);
   const [amountPerWinner, setAmountPerWinner] = useState(0);
   const [hostAddress, setHostAddress] = useState<string | null>(null);
+  const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
+  const [approvalSuccess, setApprovalSuccess] = useState("")
+  const [raffleSuccess, setRaffleSuccess] = useState("")
+  const [raffleAddress, setRaffleAddress] = useState("")
+
+  const raffleFactoryAddress = '0xB8DCacEf1CDaf0CDEaa09B8e0087cC9fc90ff065';
 
   const handleWalletConnect = (account: string) => {
     setHostAddress(account);
+    setProvider(new ethers.providers.Web3Provider((window as any).ethereum));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleApprove = async () => {
+    if (!provider || !hostAddress) return;
+
+    const signer = provider.getSigner();
+    const tokenContract = new ethers.Contract(tokenAddress, [
+      'function approve(address spender, uint256 amount) public returns (bool)'
+    ], signer);
+
+    const totalReward = amountPerWinner * numberOfWinners;
+    const hostDeposit = totalReward + (totalReward / 20); // Adding 5% to the total reward
+
+    try {
+      const tx = await tokenContract.approve(raffleFactoryAddress, hostDeposit);
+      await tx.wait();
+      setApprovalSuccess("Approval successful")
+      console.log('Approval successful');
+    } catch (error) {
+        console.error('Approval failed:', error);
+        setApprovalSuccess("Approval failed. Check console for more information")
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log({
-      casterName,
-      tokenAddress,
-      numberOfParticipants,
-      numberOfWinners,
-      amountPerWinner,
-      hostAddress
-    });
+    if (!provider || !hostAddress) return;
+
+    const signer = provider.getSigner();
+    const raffleFactoryContract = new ethers.Contract(raffleFactoryAddress, [
+      'function createRaffle(uint256 numberOfUsers, address tokenAddress, uint256 tokensPerWinner, address host, uint256 winnerCount, string memory casterName) public payable returns (address)'
+    ], signer);
+
+    const totalReward = amountPerWinner * numberOfWinners;
+    const mustDeposit = ethers.utils.parseEther("0.00075"); 
+
+    try {
+      const tx = await raffleFactoryContract.createRaffle(
+        numberOfParticipants,
+        tokenAddress,
+        amountPerWinner,
+        hostAddress,
+        numberOfWinners,
+        casterName,
+        { value: mustDeposit }
+      );
+      const receipt = await tx.wait();
+      console.log('Raffle created successfully', receipt.logs?.[1].address);
+      setRaffleSuccess("Raffle created successfully")
+      setRaffleAddress(receipt.logs?.[1].address)
+    } catch (error) {
+        console.error('Raffle creation failed:', error);
+        setRaffleSuccess("Raffle creation failed. Check console for details.")
+    }
   };
 
   return (
@@ -82,6 +132,31 @@ const CreateRaffle = () => {
       <WalletButtonWrapper>
         <ConnectWallet onConnect={handleWalletConnect} />
       </WalletButtonWrapper>
+      <Form onSubmit={handleSubmit}>
+        <StyledTitle>Approve Spending</StyledTitle>
+        <StyledInput
+          label="Token Address"
+          name="tokenAddress"
+          value={tokenAddress}
+          onChange={(e) => setTokenAddress(e.target.value)}
+        />
+        <StyledInput
+          label="Number of Winners"
+          name="numberOfWinners"
+          type="number"
+          value={numberOfWinners.toString()}
+          onChange={(e) => setNumberOfWinners(Number(e.target.value))}
+        />
+        <StyledInput
+          label="Amount Per Winner"
+          name="amountPerWinner"
+          type="number"
+          value={amountPerWinner.toString()}
+          onChange={(e) => setAmountPerWinner(Number(e.target.value))}
+        />
+        <SubmitButton type="button" onClick={handleApprove}>Approve Tokens</SubmitButton>
+        {approvalSuccess}
+      </Form>
       <Form onSubmit={handleSubmit}>
         <StyledTitle>Create Your Raffle</StyledTitle>
         <StyledInput
@@ -118,12 +193,12 @@ const CreateRaffle = () => {
           onChange={(e) => setAmountPerWinner(Number(e.target.value))}
         />
         <SubmitButton type="submit">Create Raffle</SubmitButton>
-        <br />
         {hostAddress && (
           <div>
-            <p>Host Address Will Be Settled to: {hostAddress}</p>
+            <p>Host Address: {hostAddress}</p>
           </div>
         )}
+        {raffleAddress ? `${raffleSuccess} on address ${raffleAddress}` : raffleSuccess}
       </Form>
     </FormContainer>
   );

@@ -16,7 +16,6 @@ const frameHandler = frames(async (ctx) => {
   const casterName = process.env.FARCASTER_NAME;
   let signature;
   
-  
   const privateKey = process.env.PRIVATE_KEY;
   if (!privateKey) {
     throw new Error('PRIVATE_KEY environment variable is not set.');
@@ -24,30 +23,28 @@ const frameHandler = frames(async (ctx) => {
   const wallet = new ethers.Wallet(privateKey);
   
   const createSignature = async () => {
-    console.log("called")
     const messageHash = ethers.utils.solidityKeccak256(['address', 'string'], [verifiedAddress?.[0], casterName]);
-    console.log(messageHash)
     const signature = await wallet.signMessage(ethers.utils.arrayify(messageHash));
     return signature
   }
-  
-  console.log(message?.requesterVerifiedAddresses?.[0] ?? 'Address not available');
-  console.log(ctx.searchParams?.page);
-  if(ctx.searchParams?.page == "result") {
-    if (true && verifiedAddress) (
-      signature = await createSignature()
-    )
+
+  if (ctx.searchParams?.page === "result") {
+    if (verifiedAddress) {
+      signature = await createSignature();
+    }
   }
+
   if (ctx.message?.transactionId) {
     return {
-      image: `${process.env.APP_URL}/transaction_submitted.png`,
+      image: (`${process.env.APP_URL}/transaction_submitted.png`),
       imageOptions: {
-        aspectRatio: "1:1",
+        width: 100,
+        height: 100,
       },
       buttons: [
         <Button
           action="link"
-          target={`https://sepolia.basescan.org/tx/${ctx.message.transactionId}`}
+          target={`https://sepolia.basescan.org//tx/${ctx.message.transactionId}`}
         >
           View on block explorer
         </Button>,
@@ -57,7 +54,11 @@ const frameHandler = frames(async (ctx) => {
 
   if (page === "initial") {
     return {
-      image: `${process.env.APP_URL}/entrance.png`,
+      image: (<div>`${process.env.APP_URL}/entrance.png`</div>),
+      imageOptions: {
+        width: 100,
+        height: 100,
+      },
       buttons: [
         <Button action="post" target={{ query: { page: "result" } }}>
           Am I?
@@ -67,10 +68,10 @@ const frameHandler = frames(async (ctx) => {
   }
 
   if (message) {
-      const imageUrl = followState 
-        ? `${process.env.APP_URL}/follow_true.png` 
-        : `${process.env.APP_URL}/follow_false.png`;
-  
+    const imageUrl = followState 
+      ? `${process.env.APP_URL}/follow_true.png` 
+      : `${process.env.APP_URL}/follow_false.png`;
+
     return {
       image: imageUrl,
       buttons: [
@@ -96,6 +97,6 @@ const frameHandler = frames(async (ctx) => {
     ],
   };
 });
- 
+
 export const GET = frameHandler;
 export const POST = frameHandler;

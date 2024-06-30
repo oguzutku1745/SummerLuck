@@ -1,5 +1,9 @@
+import React from 'react';
 import { fetchMetadata } from "frames.js/next";
- 
+import CreateRaffle from "./components/create-raffle";
+import '@rainbow-me/rainbowkit/styles.css';
+//import Providers from "./providers";
+
 export async function generateMetadata() {
   return {
     title: "My Page",
@@ -14,7 +18,13 @@ export async function generateMetadata() {
     ),
   };
 }
- 
+
 export default function Page() {
-  return <span>My existing page</span>;
+  return ( <span>Hi!</span>
+    //<div style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundRepeat: "no-repeat" }}>
+    //  <Providers>
+    //    <CreateRaffle />
+    //  </Providers>
+    //</div>
+  );
 }

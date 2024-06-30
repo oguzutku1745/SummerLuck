@@ -40,11 +40,7 @@ const frameHandler = frames(async (ctx) => {
   }
   if (ctx.message?.transactionId) {
     return {
-      image: (
-        <div tw="bg-purple-800 text-white w-full h-full justify-center items-center flex">
-          Transaction submitted! {ctx.message.transactionId}
-        </div>
-      ),
+      image: `${process.env.APP_URL}/transaction_submitted.png`,
       imageOptions: {
         aspectRatio: "1:1",
       },
@@ -59,7 +55,7 @@ const frameHandler = frames(async (ctx) => {
     };
   }
 
-  if (page === "initial")
+  if (page === "initial") {
     return {
       image: `${process.env.APP_URL}/entrance.png`,
       buttons: [
@@ -68,6 +64,7 @@ const frameHandler = frames(async (ctx) => {
         </Button>,
       ],
     };
+  }
 
   if (message) {
       const imageUrl = followState 

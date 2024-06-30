@@ -2,7 +2,7 @@ import React from 'react';
 import { fetchMetadata } from "frames.js/next";
 import CreateRaffle from "./components/create-raffle";
 import '@rainbow-me/rainbowkit/styles.css';
-//import Providers from "./providers";
+import ConnectWallet from './components/ConnectWallet';
 
 export async function generateMetadata() {
   return {
@@ -20,11 +20,9 @@ export async function generateMetadata() {
 }
 
 export default function Page() {
-  return ( <span>Hi!</span>
-    //<div style={{ width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundRepeat: "no-repeat" }}>
-    //  <Providers>
-    //    <CreateRaffle />
-    //  </Providers>
-    //</div>
+  return (
+    <div style={{ backgroundColor:"darkcyan", width: '100%', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <CreateRaffle />
+    </div>
   );
 }

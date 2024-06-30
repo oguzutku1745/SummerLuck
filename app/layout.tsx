@@ -14,12 +14,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const initialImageUrl = `${process.env.APP_URL}/entrance.png`;
+
   return (
     <html lang="en">
       <head>
-      <meta property="fc:frame" content="vNext" />
-      <meta property="fc:frame:image" content={`${process.env.APP_URL}/entrance.png`}/>
-      <meta property="og:image" content={`${process.env.APP_URL}/entrance.png`}/>
+        <meta property="fc:frame" content="vNext" />
+        <meta property="fc:frame:image" content={initialImageUrl} />
+        <meta property="og:image" content={initialImageUrl} />
       </head>
       <body className={inter.className}>{children}</body>
     </html>

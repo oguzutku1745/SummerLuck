@@ -51,7 +51,7 @@ const frameHandler = frames(async (ctx) => {
       buttons: [
         <Button
           action="link"
-          target={`https://sepolia.basescan.org//tx/${ctx.message.transactionId}`}
+          target={`https://sepolia.basescan.org/tx/${ctx.message.transactionId}`}
         >
           View on block explorer
         </Button>,
@@ -61,14 +61,7 @@ const frameHandler = frames(async (ctx) => {
 
   if (page === "initial")
     return {
-      image: (
-        <span>
-      <div tw="bg-purple-800 text-white w-full h-full justify-center items-center flex">
-            Welcome to Lucky Summer!
-            You can join to raffle if you follow the caster.
-          </div>
-        </span>
-      ),
+      image: `${process.env.APP_URL}/entrance.png`,
       buttons: [
         <Button action="post" target={{ query: { page: "result" } }}>
           Am I?
@@ -76,17 +69,15 @@ const frameHandler = frames(async (ctx) => {
       ],
     };
 
-  if (message && typeof true === 'boolean') {
+  if (message) {
+      const imageUrl = followState 
+        ? `${process.env.APP_URL}/follow_true.png` 
+        : `${process.env.APP_URL}/follow_false.png`;
+  
     return {
-      image: (
-        <div tw="bg-purple-800 text-white w-full h-full justify-center items-center flex">
-          {true
-            ? "You are following the caster."
-            : "You are not following the caster"}
-        </div>
-      ),
+      image: imageUrl,
       buttons: [
-        true && message.requesterVerifiedAddresses ? (
+        followState && message.requesterVerifiedAddresses ? (
           <Button action="tx" target={{ pathname: "/txdata", query: { userSign: signature } }} post_url="/" >
             Mint
           </Button>
@@ -100,11 +91,7 @@ const frameHandler = frames(async (ctx) => {
   }
 
   return {
-    image: (
-      <div tw="bg-purple-800 text-white w-full h-full justify-center items-center flex">
-        Error: Invalid message format.
-      </div>
-    ),
+    image: `${process.env.APP_URL}/error.png`,
     buttons: [
       <Button action="post" target="/">
         Go Back

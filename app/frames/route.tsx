@@ -69,7 +69,7 @@ const frameHandler = frames(async (ctx) => {
     ];
   }
 
-  const imageUrl = `${process.env.APP_URL}/api/render-image?page=${page}&transactionId=${ctx.message?.transactionId || ''}&isFollowing=${followState}`;
+  const imageUrl = `${process.env.APP_URL}/app/api/render-image?page=${page}&transactionId=${ctx.message?.transactionId || ''}&isFollowing=${followState}`;
 
   return {
     image: imageUrl,

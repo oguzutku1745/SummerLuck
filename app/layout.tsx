@@ -14,7 +14,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const imageUrl = `${process.env.APP_URL}/api/render-image?timestamp=${Date.now()}`;
+  const imageUrl = `${process.env.APP_URL}/app/api/render-image?timestamp=${Date.now()}`;
 
   return (
     <html lang="en">

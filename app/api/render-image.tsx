@@ -10,6 +10,8 @@ export default async function handler(req: Request) {
   const transactionId = searchParams.get("transactionId");
   const isFollowing = searchParams.get("isFollowing") === "true";
 
+  console.log("Called the api")
+
   let content;
 
   if (page === "initial") {

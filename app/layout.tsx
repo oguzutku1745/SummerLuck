@@ -14,14 +14,12 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const imageUrl = `${process.env.APP_URL}/app/api/render-image?timestamp=${Date.now()}`;
-
   return (
     <html lang="en">
       <head>
-        <meta property="fc:frame" content="vNext" />
-        <meta property="fc:frame:image" content={imageUrl} />
-        <meta property="og:image" content={imageUrl} />
+      <meta property="fc:frame" content="vNext" />
+      <meta property="fc:frame:image" content={`${process.env.APP_URL}/entrance.png`}/>
+      <meta property="og:image" content={`${process.env.APP_URL}/entrance.png`}/>
       </head>
       <body className={inter.className}>{children}</body>
     </html>

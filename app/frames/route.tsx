@@ -38,7 +38,7 @@ const frameHandler = frames(async (ctx) => {
     buttons = [
       <Button
         action="link"
-        target={`https://sepolia.basescan.org//tx/${ctx.message.transactionId}`}
+        target={`https://sepolia.basescan.org/tx/${ctx.message.transactionId}`}
       >
         View on block explorer
       </Button>,

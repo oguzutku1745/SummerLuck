@@ -21,6 +21,7 @@ export default function RootLayout({
       <head>
         <meta property="fc:frame" content="vNext" />
         <meta property="fc:frame:image" content={imageUrl} />
+        <meta property="og:image" content={imageUrl} />
       </head>
       <body className={inter.className}>{children}</body>
     </html>

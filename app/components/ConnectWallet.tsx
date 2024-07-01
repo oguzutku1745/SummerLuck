@@ -25,7 +25,7 @@ const ConnectWallet: React.FC<ConnectWalletProps> = ({ onConnect }) => {
   };
 
   return (
-    <div style={{ border:"2px solid white", borderRadius:"5px", padding:"10px", backgroundColor:"#fff" }}>
+    <div style={{ border:"2px solid white", borderRadius:"5px", padding:"10px", backgroundColor:"#fff", color:"black" }}>
       {account ? (
         <div>
           <p>Connected account: {account}</p>

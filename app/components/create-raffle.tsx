@@ -65,6 +65,7 @@ const CreateRaffle = () => {
   const [approvalSuccess, setApprovalSuccess] = useState("")
   const [raffleSuccess, setRaffleSuccess] = useState("")
   const [raffleAddress, setRaffleAddress] = useState("")
+  const [customRaffleUrl, setCustomRaffleUrl] = useState("");
 
   const raffleFactoryAddress = '0xB8DCacEf1CDaf0CDEaa09B8e0087cC9fc90ff065';
 
@@ -136,13 +137,15 @@ const CreateRaffle = () => {
       });
 
       if (response.ok) {
+        const result = await response.json();
+        setCustomRaffleUrl(result.url);
         console.log('Custom raffle created successfully');
       } else {
         console.error('Failed to create custom raffle');
       }
     } catch (error) {
-        console.error('Raffle creation failed:', error);
-        setRaffleSuccess("Raffle creation failed. Check console for details.")
+      console.error('Raffle creation failed:', error);
+      setRaffleSuccess("Raffle creation failed. Check console for details.");
     }
   };
 
@@ -213,11 +216,16 @@ const CreateRaffle = () => {
         />
         <SubmitButton type="submit">Create Raffle</SubmitButton>
         {hostAddress && (
-          <div>
+          <div style={{color:"black"}}>
             <p>Host Address: {hostAddress}</p>
           </div>
         )}
-        {raffleAddress ? `${raffleSuccess} on address ${raffleAddress}` : raffleSuccess}
+        <p style={{color:"black"}}>{raffleAddress ? `${raffleSuccess} on address ${raffleAddress}` : raffleSuccess}</p>
+        {customRaffleUrl && (
+          <div style={{color:"black"}}>
+            <p>Custom Raffle URL: <a href={customRaffleUrl} target="_blank" rel="noopener noreferrer">{customRaffleUrl}</a></p>
+          </div>
+        )}
       </Form>
     </FormContainer>
   );

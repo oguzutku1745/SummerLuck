@@ -16,6 +16,7 @@ const createCustomRaffle = async (casterName, raffleAddress) => {
 
     const newEnvContent = `
 APP_URL_${currentIndex}="http://summer-luck.vercel.app/customized/custom-${currentIndex}"
+VERCEL_URL_${currentIndex}="summer-luck.vercel.app/customized/custom-${currentIndex}"
 RAFFLE_ADDRESS_${currentIndex}=${raffleAddress}
 FARCASTER_NAME_${currentIndex}="${casterName}"
 `;
@@ -37,6 +38,7 @@ FARCASTER_NAME_${currentIndex}="${casterName}"
       let fileContent = fs.readFileSync(filePath, 'utf-8');
       fileContent = fileContent.replace(/custom-1/g, `custom-${currentIndex}`)
                                 .replace(/APP_URL_1/g, `APP_URL_${currentIndex}`)
+                                .replace(/VERCEL_URL_1/g, `APP_URL_${currentIndex}`)
                                 .replace(/FARCASTER_NAME_1/g, `FARCASTER_NAME_${currentIndex}`)
                                 .replace(/RAFFLE_ADDRESS_1/g, `RAFFLE_ADDRESS_${currentIndex}`);
       fs.writeFileSync(filePath, fileContent, 'utf-8');

@@ -8,7 +8,7 @@ export async function generateMetadata() {
     other: await fetchMetadata(
       new URL(
         "/frames",
-        "http://summer-luck.vercel.app/customized/custom-3"
+        "https://summer-luck.vercel.app/customized/custom-3"
           ? `https://${"summer-luck.vercel.app/customized/custom-3"}`
           : "http://localhost:3000"
       )

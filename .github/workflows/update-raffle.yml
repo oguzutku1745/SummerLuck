@@ -27,7 +27,7 @@ jobs:
           cp -r app/customized/custom-1 $CUSTOM_DIR
           
           sed -i "s/custom-1/custom-${{ github.event.inputs.customIndex }}/g" $CUSTOM_DIR/frames/frames.ts
-          sed -i "s|APP_URL_1|http://summer-luck.vercel.app/customized/custom-${{ github.event.inputs.customIndex }}|g" $CUSTOM_DIR/frames/frames.ts
+          sed -i "s|APP_URL|http://summer-luck.vercel.app/customized/custom-${{ github.event.inputs.customIndex }}|g" $CUSTOM_DIR/frames/frames.ts
           sed -i "s|VERCEL_URL_1|http://summer-luck.vercel.app/customized/custom-${{ github.event.inputs.customIndex }}|g" $CUSTOM_DIR/frames/frames.ts
           sed -i "s|FARCASTER_NAME_1|${{ github.event.inputs.casterName }}|g" $CUSTOM_DIR/frames/frames.ts
           sed -i "s|RAFFLE_ADDRESS_1|${{ github.event.inputs.raffleAddress }}|g" $CUSTOM_DIR/frames/frames.ts

@@ -36,7 +36,7 @@ const frameHandler = frames(async (ctx) => {
 
   if (ctx.message?.transactionId) {
     return {
-      image: (`${"http://summer-luck.vercel.app/customized/custom-3"}/transaction_submitted.png`),
+      image: (`${"https://summer-luck.vercel.app/customized/custom-3"}/transaction_submitted.png`),
       imageOptions: {
         width: 100,
         height: 100,
@@ -54,7 +54,7 @@ const frameHandler = frames(async (ctx) => {
 
   if (page === "initial") {
     return {
-      image: (`${"http://summer-luck.vercel.app/customized/custom-3"}/entrance.png`),
+      image: (`${"https://summer-luck.vercel.app/customized/custom-3"}/entrance.png`),
       imageOptions: {
         width: 100,
         height: 100,
@@ -72,8 +72,8 @@ const frameHandler = frames(async (ctx) => {
 
   if (message) {
     const imageUrl = followState 
-      ? `${"http://summer-luck.vercel.app/customized/custom-3"}/follow_true.png` 
-      : `${"http://summer-luck.vercel.app/customized/custom-3"}/follow_false.png`;
+      ? `${"https://summer-luck.vercel.app/customized/custom-3"}/follow_true.png` 
+      : `${"https://summer-luck.vercel.app/customized/custom-3"}/follow_false.png`;
 
     return {
       image: imageUrl,
@@ -92,7 +92,7 @@ const frameHandler = frames(async (ctx) => {
   }
 
   return {
-    image: `${"http://summer-luck.vercel.app/customized/custom-3"}/error.png`,
+    image: `${"https://summer-luck.vercel.app/customized/custom-3"}/error.png`,
     buttons: [
       <Button action="post" target="/">
         Go Back

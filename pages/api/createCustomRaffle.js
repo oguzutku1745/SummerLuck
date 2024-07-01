@@ -104,9 +104,10 @@ async function createCustomRaffle(casterName, raffleAddress) {
   try {
     // Find the next custom index
     const index = await findNextIndex();
-
+    const customRaffleUrl = `https://summer-luck.vercel.app/customized/custom-${index}`;
     // Push the changes to GitHub
     await pushChangesToGitHub(index, casterName, raffleAddress);
+    return customRaffleUrl;
   } catch (error) {
     console.error('Error creating custom raffle:', error);
     throw error;
@@ -128,9 +129,10 @@ export default async function handler(req, res) {
       console.log('Starting process');
 
       // Create the custom raffle
-      await createCustomRaffle(casterName, raffleAddress);
+      const customRaffleUrl = await createCustomRaffle(casterName, raffleAddress);
 
-      res.status(200).json({ message: 'Raffle created and GitHub Action triggered successfully' });
+      // Send the custom raffle URL in the response
+      res.status(200).json({ message: 'Raffle created and GitHub Action triggered successfully', url: customRaffleUrl });
     } catch (error) {
       console.error('Error creating custom raffle:', error);
       res.status(500).json({ error: 'Internal Server Error' });

@@ -3,7 +3,8 @@ import { promisify } from 'util';
 import { writeFile, unlink, rm } from 'fs/promises';
 import path from 'path';
 import fs from 'fs-extra';
-import simpleGit from 'simple-git';
+import git from 'isomorphic-git';
+import http from '@isomorphic-git/http-node';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -53,11 +54,15 @@ async function pushChangesToGitHub(index, casterName, raffleAddress) {
     await rm(repoPath, { recursive: true, force: true });
     console.log('Removed existing directory:', repoPath);
 
-    // Initialize simple-git with the correct directory
-    const git = simpleGit();
-
     // Clone the repository
-    await git.clone('git@github.com:oguzutku1745/SummerLuck.git', repoPath);
+    await git.clone({
+      fs,
+      http,
+      dir: repoPath,
+      url: 'https://github.com/oguzutku1745/SummerLuck.git',
+      singleBranch: true,
+      depth: 1,
+    });
     console.log('Repository cloned successfully');
 
     const newCustomDir = path.join(repoPath, `app/customized/custom-${index}`);
@@ -68,15 +73,25 @@ async function pushChangesToGitHub(index, casterName, raffleAddress) {
     // Apply new environment variables to custom-n directory
     await updateCustomFiles(newCustomDir, index, casterName, raffleAddress);
 
-    // Initialize simple-git in the cloned repository directory
-    const repoGit = simpleGit(repoPath);
-
     // Commit and push the changes
-    await repoGit.addConfig('user.name', 'github-actions[bot]');
-    await repoGit.addConfig('user.email', 'github-actions[bot]@users.noreply.github.com');
-    await repoGit.add(newCustomDir);
-    await repoGit.commit(`Add custom raffle ${index}`);
-    await repoGit.push('origin', 'main');
+    await git.add({ fs, dir: repoPath, filepath: '.' });
+    await git.commit({
+      fs,
+      dir: repoPath,
+      author: {
+        name: 'github-actions[bot]',
+        email: 'github-actions[bot]@users.noreply.github.com',
+      },
+      message: `Add custom raffle ${index}`,
+    });
+    await git.push({
+      fs,
+      http,
+      dir: repoPath,
+      remote: 'origin',
+      ref: 'main',
+      onAuth: () => ({ username: process.env.GITHUB_TOKEN }),
+    });
 
     console.log(`Custom raffle created and pushed to GitHub successfully at: custom-${index}`);
   } catch (error) {
@@ -92,7 +107,6 @@ async function createCustomRaffle(casterName, raffleAddress) {
 
     // Push the changes to GitHub
     await pushChangesToGitHub(index, casterName, raffleAddress);
-
   } catch (error) {
     console.error('Error creating custom raffle:', error);
     throw error;
@@ -117,7 +131,6 @@ export default async function handler(req, res) {
       await createCustomRaffle(casterName, raffleAddress);
 
       res.status(200).json({ message: 'Raffle created and GitHub Action triggered successfully' });
-
     } catch (error) {
       console.error('Error creating custom raffle:', error);
       res.status(500).json({ error: 'Internal Server Error' });

@@ -67,7 +67,7 @@ const CreateRaffle = () => {
   const [raffleAddress, setRaffleAddress] = useState("")
   const [customRaffleUrl, setCustomRaffleUrl] = useState("");
 
-  const raffleFactoryAddress = '0xB8DCacEf1CDaf0CDEaa09B8e0087cC9fc90ff065';
+  const raffleFactoryAddress = '0xB49502378FFBd7cce3fF2F2BBB20a1c967aB0bA3';
 
   const handleWalletConnect = (account: string) => {
     setHostAddress(account);

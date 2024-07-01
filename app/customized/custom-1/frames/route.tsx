@@ -29,7 +29,7 @@ const frameHandler = frames(async (ctx) => {
   }
 
   if (ctx.searchParams?.page === "result") {
-    if (verifiedAddress) {
+    if (followState && verifiedAddress) {
       signature = await createSignature();
     }
   }

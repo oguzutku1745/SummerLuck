@@ -10,8 +10,10 @@ interface CustomMessage {
 
 const frameHandler = frames(async (ctx) => {
   const page = ctx.searchParams?.page ?? "initial";
+  console.log(ctx)
   const message = ctx.message as CustomMessage | undefined;
-  const followState = message?.requesterFollowsCaster;
+  //const followState = message?.requesterFollowsCaster;
+  const followState = true;
   const verifiedAddress = message?.requesterVerifiedAddresses;
   const casterName = process.env.FARCASTER_NAME;
   let signature;
@@ -71,6 +73,7 @@ const frameHandler = frames(async (ctx) => {
   }
 
   if (message) {
+    console.log(message)
     const imageUrl = followState 
       ? `${process.env.APP_URL}/follow_true.png` 
       : `${process.env.APP_URL}/follow_false.png`;

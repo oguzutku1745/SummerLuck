@@ -1,0 +1,45 @@
+name: Update Custom Raffle
+
+on:
+  workflow_dispatch:
+    inputs:
+      casterName:
+        description: 'Caster Name'
+        required: true
+      raffleAddress:
+        description: 'Raffle Address'
+        required: true
+      customIndex:
+        description: 'Custom Index'
+        required: true
+
+jobs:
+  update-custom-raffle:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Update custom raffle files
+        run: |
+          CUSTOM_DIR="app/customized/custom-${{ github.event.inputs.customIndex }}"
+          cp -r app/customized/custom-1 $CUSTOM_DIR
+          
+          sed -i "s/custom-1/custom-${{ github.event.inputs.customIndex }}/g" $CUSTOM_DIR/frames/frames.ts
+          sed -i "s|APP_URL_1|http://summer-luck.vercel.app/customized/custom-${{ github.event.inputs.customIndex }}|g" $CUSTOM_DIR/frames/frames.ts
+          sed -i "s|VERCEL_URL_1|http://summer-luck.vercel.app/customized/custom-${{ github.event.inputs.customIndex }}|g" $CUSTOM_DIR/frames/frames.ts
+          sed -i "s|FARCASTER_NAME_1|${{ github.event.inputs.casterName }}|g" $CUSTOM_DIR/frames/frames.ts
+          sed -i "s|RAFFLE_ADDRESS_1|${{ github.event.inputs.raffleAddress }}|g" $CUSTOM_DIR/frames/frames.ts
+
+          # Repeat the above sed commands for the other files
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add app/customized/custom-${{ github.event.inputs.customIndex }}
+          git commit -m "Add custom raffle ${{ github.event.inputs.customIndex }}"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

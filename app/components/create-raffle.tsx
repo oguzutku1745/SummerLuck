@@ -123,8 +123,8 @@ const CreateRaffle = () => {
       setRaffleSuccess("Raffle created successfully")
       setRaffleAddress(newRaffleAddress);
 
-      // Send data to the serverless function to trigger GitHub Action
-      const response = await fetch('/api/createRaffle', {
+      // Send data to the serverless function to trigger custom raffle creation
+      const response = await fetch('/api/createCustomRaffle', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -136,9 +136,9 @@ const CreateRaffle = () => {
       });
 
       if (response.ok) {
-        console.log('Data sent to serverless function successfully');
+        console.log('Custom raffle created successfully');
       } else {
-        console.error('Failed to send data to serverless function');
+        console.error('Failed to create custom raffle');
       }
     } catch (error) {
         console.error('Raffle creation failed:', error);
@@ -213,11 +213,11 @@ const CreateRaffle = () => {
         />
         <SubmitButton type="submit">Create Raffle</SubmitButton>
         {hostAddress && (
-          <div style={{color:"black"}}>
+          <div>
             <p>Host Address: {hostAddress}</p>
           </div>
         )}
-        <p style={{color:"black"}} >{raffleAddress ? `${raffleSuccess} on address ${raffleAddress}` : raffleSuccess}</p>
+        {raffleAddress ? `${raffleSuccess} on address ${raffleAddress}` : raffleSuccess}
       </Form>
     </FormContainer>
   );

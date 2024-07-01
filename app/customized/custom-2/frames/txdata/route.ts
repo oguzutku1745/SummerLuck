@@ -27,7 +27,7 @@ import {
     });
   
   
-    const RAFFLE_ADDRESS = "0xe3d9C096Cb0031aAA77850CF41FacC44e33b35B8";
+    const RAFFLE_ADDRESS = "0x6889a75Bc335792F5e37761c2ca4011C84BA9dF3";
 
     if (!RAFFLE_ADDRESS || !RAFFLE_ADDRESS.startsWith('0x')) {
       throw new Error("RAFFLE_ADDRESS is not defined or does not start with '0x'");

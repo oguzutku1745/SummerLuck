@@ -13,7 +13,7 @@ const frameHandler = frames(async (ctx) => {
   const message = ctx.message as CustomMessage | undefined;
   const followState = message?.requesterFollowsCaster;
   const verifiedAddress = message?.requesterVerifiedAddresses;
-  const casterName = process.env.FARCASTER_NAME;
+  const casterName = process.env.FARCASTER_NAME_1;
   let signature;
   
   const privateKey = process.env.PRIVATE_KEY;
@@ -54,7 +54,7 @@ const frameHandler = frames(async (ctx) => {
 
   if (page === "initial") {
     return {
-      image: (<div>`${process.env.APP_URL}/entrance.png`</div>),
+      image: (`${process.env.APP_URL}/entrance.png`),
       imageOptions: {
         width: 100,
         height: 100,

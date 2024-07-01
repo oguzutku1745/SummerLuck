@@ -12,8 +12,7 @@ const frameHandler = frames(async (ctx) => {
   const page = ctx.searchParams?.page ?? "initial";
   console.log(ctx)
   const message = ctx.message as CustomMessage | undefined;
-  //const followState = message?.requesterFollowsCaster;
-  const followState = true;
+  const followState = message?.requesterFollowsCaster;
   const verifiedAddress = message?.requesterVerifiedAddresses;
   const casterName = process.env.FARCASTER_NAME;
   let signature;

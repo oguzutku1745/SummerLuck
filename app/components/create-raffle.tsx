@@ -213,11 +213,11 @@ const CreateRaffle = () => {
         />
         <SubmitButton type="submit">Create Raffle</SubmitButton>
         {hostAddress && (
-          <div>
+          <div style={{color:"black"}}>
             <p>Host Address: {hostAddress}</p>
           </div>
         )}
-        {raffleAddress ? `${raffleSuccess} on address ${raffleAddress}` : raffleSuccess}
+        <p style={{color:"black"}} >{raffleAddress ? `${raffleSuccess} on address ${raffleAddress}` : raffleSuccess}</p>
       </Form>
     </FormContainer>
   );

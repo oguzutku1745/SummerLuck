@@ -1,0 +1,37 @@
+name: Update .env
+
+on:
+  workflow_dispatch:
+    inputs:
+      casterName:
+        description: 'Caster Name'
+        required: true
+      raffleAddress:
+        description: 'Raffle Address'
+        required: true
+
+jobs:
+  update-env:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Update .env file
+        run: |
+          currentIndex=$(grep -c '^APP_URL_' .env || echo 0)
+          nextIndex=$((currentIndex + 1))
+          echo "APP_URL_${nextIndex}=\"http://summer-luck.vercel.app/customized/custom-${nextIndex}\"" >> .env
+          echo "RAFFLE_ADDRESS_${nextIndex}=${{ github.event.inputs.raffleAddress }}" >> .env
+          echo "FARCASTER_NAME_${nextIndex}=\"${{ github.event.inputs.casterName }}\"" >> .env
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .env
+          git commit -m "Update .env with new raffle details"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

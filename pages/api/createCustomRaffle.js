@@ -4,7 +4,7 @@ import { writeFile, unlink, rm } from 'fs/promises';
 import path from 'path';
 import fs from 'fs-extra';
 import git from 'isomorphic-git';
-import http from '@isomorphic-git/http-node';
+import http from 'isomorphic-git/http/node';
 import dotenv from 'dotenv';
 
 dotenv.config();

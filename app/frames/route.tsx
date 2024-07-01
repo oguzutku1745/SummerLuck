@@ -63,6 +63,9 @@ const frameHandler = frames(async (ctx) => {
         <Button action="post" target={{ query: { page: "result" } }}>
           Am I?
         </Button>,
+        <Button action="link" target="https://summer-luck.vercel.app">
+          Create Your Own Raffle
+        </Button>,
       ],
     };
   }

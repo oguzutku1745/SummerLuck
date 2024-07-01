@@ -30,6 +30,7 @@ async function updateCustomFiles(newCustomDir, index, casterName, raffleAddress)
   ];
 
   const replacements = {
+    '/customized/custom-1/frames' : `/customized/custom-${index}/frames`,
     'process.env.APP_URL': `"https://summer-luck.vercel.app/customized/custom-${index}"`,
     'process.env.VERCEL_URL_1': `"summer-luck.vercel.app/customized/custom-${index}"`,
     'process.env.FARCASTER_NAME_1': `"${casterName}"`,

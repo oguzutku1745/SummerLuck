@@ -9,7 +9,7 @@ export async function generateMetadata() {
       new URL(
         "/frames",
         process.env.APP_URL_1
-          ? `https://${process.env.VERCEL_URL}`
+          ? `https://${process.env.VERCEL_URL_1}`
           : "http://localhost:3000"
       )
     ),

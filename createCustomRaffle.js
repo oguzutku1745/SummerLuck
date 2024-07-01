@@ -15,7 +15,7 @@ const createCustomRaffle = async (casterName, raffleAddress) => {
     const currentIndex = (envContent.match(/APP_URL_/g) || []).length + 1;
 
     const newEnvContent = `
-APP_URL_${currentIndex}="http://localhost:3000/customized/custom-${currentIndex}"
+APP_URL_${currentIndex}="http://summer-luck.vercel.app/customized/custom-${currentIndex}"
 RAFFLE_ADDRESS_${currentIndex}=${raffleAddress}
 FARCASTER_NAME_${currentIndex}="${casterName}"
 `;

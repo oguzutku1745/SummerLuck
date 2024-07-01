@@ -28,13 +28,19 @@ async function updateCustomFiles(newCustomDir, index, casterName, raffleAddress)
     path.join(newCustomDir, 'frames/txdata/route.ts'),
   ];
 
+  const replacements = {
+    'process.env.APP_URL': `"http://summer-luck.vercel.app/customized/custom-${index}"`,
+    'process.env.VERCEL_URL_1': `"summer-luck.vercel.app/customized/custom-${index}"`,
+    'process.env.FARCASTER_NAME_1': `"${casterName}"`,
+    'process.env.RAFFLE_ADDRESS_1': `"${raffleAddress}"`
+  };
+
   filesToUpdate.forEach(filePath => {
     let fileContent = fs.readFileSync(filePath, 'utf-8');
-    fileContent = fileContent.replace(/custom-1/g, `custom-${index}`)
-                              .replace(/APP_URL/g, `http://summer-luck.vercel.app/customized/custom-${index}`)
-                              .replace(/VERCEL_URL_1/g, `summer-luck.vercel.app/customized/custom-${index}`)
-                              .replace(/FARCASTER_NAME_1/g, `${casterName}`)
-                              .replace(/RAFFLE_ADDRESS_1/g, `${raffleAddress}`);
+    for (const [key, value] of Object.entries(replacements)) {
+      const regex = new RegExp(key, 'g');
+      fileContent = fileContent.replace(regex, value);
+    }
     fs.writeFileSync(filePath, fileContent, 'utf-8');
   });
 }

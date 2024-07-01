@@ -13,7 +13,7 @@ const FormContainer = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-  gap: 10px
+  gap: 10px;
 `;
 
 const Form = styled.form`
@@ -118,9 +118,28 @@ const CreateRaffle = () => {
         { value: mustDeposit }
       );
       const receipt = await tx.wait();
-      console.log('Raffle created successfully', receipt.logs?.[1].address);
+      const newRaffleAddress = receipt.logs?.[1].address;
+      console.log('Raffle created successfully', newRaffleAddress);
       setRaffleSuccess("Raffle created successfully")
-      setRaffleAddress(receipt.logs?.[1].address)
+      setRaffleAddress(newRaffleAddress);
+
+      // Send data to the serverless function to trigger GitHub Action
+      const response = await fetch('/api/createRaffle', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          casterName,
+          raffleAddress: newRaffleAddress,
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Data sent to serverless function successfully');
+      } else {
+        console.error('Failed to send data to serverless function');
+      }
     } catch (error) {
         console.error('Raffle creation failed:', error);
         setRaffleSuccess("Raffle creation failed. Check console for details.")

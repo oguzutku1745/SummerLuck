@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
     try {
       // Trigger the GitHub Action
-      const response = await fetch(`https://api.github.com/repos/YOUR_GITHUB_USERNAME/YOUR_REPO_NAME/actions/workflows/create-custom-raffle.yml/dispatches`, {
+      const response = await fetch(`https://api.github.com/repos/oguzutku1745/SummerLuck/actions/workflows/create-custom-raffle.yml/dispatches`, {
         method: 'POST',
         headers: {
           'Accept': 'application/vnd.github.v3+json',
